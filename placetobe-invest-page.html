@@ -1,0 +1,47 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
+<link rel="import" href="../placetobe-styles/placetobe-styles.html">
+<link rel="import" href="../placetobe-stepper-form/placetobe-stepper-form.html">
+
+<!--
+`placetobe-invest-page`
+Placetobe Campaign Invest Page
+
+@demo demo/index.html 
+-->
+
+<dom-module id="placetobe-invest-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <placetobe-stepper-form steps='[{"finished": true, "name": "Selecteer een beloning"},{"finished": true, "name": "Kies een bedrag"},{"finished": true, "name": "Login of Registreer"},{"finished": true, "name": "Lees je contract"},{"finished": true, "name": "Betalen"}]'>
+
+      <p>Hier komt beloning</p>
+      <p>Hier komt bedrag</p>
+      <p>Hier komt inloggen</p>
+      <p>Hier komt contract</p>
+      <p>Hier komt betalen</p>
+
+    </placetobe-stepper-form>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'placetobe-invest-page',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'placetobe-invest-page',
+        },
+      },
+
+    });
+  </script>
+</dom-module>

@@ -17,6 +17,42 @@ Placetobe Campaign Invest Page
         display: block;
       }
     </style>
+    
+    <caas-auth id="auth"
+      api-endpoint="http://canapi.local"
+      signed-in="{{signedIn}}"
+      access-token="{{accessToken}}"
+      user-id="{{investorId}}"
+    ></caas-auth>
+    
+    <caas-investment
+      api-endpoint="http://canapi.local"
+      access-token="[[accessToken]]"
+      investor-id="[[investorId]]"
+      campaign-id="[[campaignId]]"
+      contract-type-id="[[contractTypeId]]"
+      available-contract-types="{{availableContractTypes}}"
+      incentive-id="[[incentiveId]]"
+      available-incentives="{{availableIncentives}}"
+      amount="[[amount]]"
+      smallest-allowed-amount="{{smallestAllowedAmount}}"
+      largest-allowed-amount="{{largestAllowedAmount}}"
+      amount-step="{{amountStep}}"
+      bic="[[bic]]"
+      available-banks="{{availableBanks}}"
+      considerations="{{considerations}}"
+      considerations-accepted="{{considerationsAccepted}}"
+      checkout-allowed="{{checkoutAllowed}}"
+      success-callback-url="http://localhost/checkout/success"
+      cancel-callback-url="http://localhost/checkout/cancel"
+      error-callback-url="http://localhost/checkout/error"
+      reject-callback-url="http://localhost/checkout/reject"
+      on-investment-signed="_handleInvestmentSigned"
+      on-investment-sign-error="_handleInvestmentSignError"
+      contract-accepted="{{contractAccepted}}"
+      on-contract-drafted="_handleContractDrafted"
+      on-contract-draft-error="_handleContractDraftError"
+    ></caas-investment>
 
     <placetobe-stepper-form steps='[{"finished": true, "name": "Selecteer een beloning"},{"finished": true, "name": "Kies een bedrag"},{"finished": true, "name": "Login of Registreer"},{"finished": true, "name": "Lees je contract"},{"finished": true, "name": "Betalen"}]'>
 

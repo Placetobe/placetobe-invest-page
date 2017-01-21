@@ -23,6 +23,7 @@
       demo-snippet {
         --demo-snippet-demo: {
           display: block;
+          padding: 0;
         }
       }
     </style>
@@ -34,7 +35,13 @@
       <h3>Basic placetobe-invest-page Demo</h3>
       <demo-snippet>
         <template>
-          <placetobe-invest-page></placetobe-invest-page>
+          <placetobe-invest-page
+            api-endpoint="http://canapi.local"
+            campaign-id="719"
+            contract-type-id="2"
+            username="investor@caastest.local"
+            password="abc123"
+          ></placetobe-invest-page>
         </template>
       </demo-snippet>
     </div>

@@ -1,6 +1,10 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="../caas-investment/caas-investment.html">
 <link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
+<link rel="import" href="../placetobe-signin-card/placetobe-signin-card.html">
+<link rel="import" href="../placetobe-input-box/placetobe-input-box.html">
 <link rel="import" href="../placetobe-stepper-form/placetobe-stepper-form.html">
 
 <!--
@@ -26,7 +30,7 @@ Placetobe Campaign Invest Page
     ></caas-auth>
     
     <caas-investment
-      api-endpoint="http://canapi.local"
+      api-endpoint="[[apiEndpoint]]"
       access-token="[[accessToken]]"
       investor-id="[[investorId]]"
       campaign-id="[[campaignId]]"
@@ -54,11 +58,61 @@ Placetobe Campaign Invest Page
       on-contract-draft-error="_handleContractDraftError"
     ></caas-investment>
 
-    <placetobe-stepper-form steps='[{"finished": true, "name": "Selecteer een beloning"},{"finished": true, "name": "Kies een bedrag"},{"finished": true, "name": "Login of Registreer"},{"finished": true, "name": "Lees je contract"},{"finished": true, "name": "Betalen"}]'>
+    <placetobe-stepper-form steps="[[steps]]">
 
-      <p>Hier komt beloning</p>
-      <p>Hier komt bedrag</p>
-      <p>Hier komt inloggen</p>
+      <div>
+
+        <template is="dom-if" if="[[!availableIncentives]]">
+          <p>beloningen laden...</p>
+        </template>
+        <template is="dom-if" if="[[availableIncentives]]">
+          <iron-selector attr-for-selected="value" selected="{{incentiveId}}">
+            <template is="dom-repeat" items="[[availableIncentives]]" as="incentive">
+
+            <label value$="[[incentive.id]]">
+              <p>
+                <input type="radio" name="incentive">
+                <b>meer dan €[[incentive.minimumInvestment]]</b><br>
+                [[incentive.message]]
+              </p>
+            </label>
+
+            </template>
+          </iron-selector>          
+        </template>
+
+      </div>
+
+      <div>
+
+        <p>
+        Typ hieronder het bedrag in dat je wilt investeren. Je kunt minimaal €[[smallestAllowedAmount]] en maximaal €[[largestAllowedAmount]] investeren, met tussenstappen van €[[amountStep]]
+        </p>
+
+        <placetobe-input-box
+          name="Je bedrag in €"
+          type="number"
+          min="[[smallestAllowedAmount]]"
+          max="[[largestAllowedAmount]]"
+          step="[[amountStep]]"
+          value="{{amount}}"
+          valid="{{amountValid}}"
+          required
+          tip="Kies een bedrag tussen de €[[smallestAllowedAmount]] en €[[largestAllowedAmount]] met tussenstappen van €[[amountStep]]."
+        ></placetobe-input-box>
+      </div>
+
+      <div>
+        <p>Placetobe is een partnerplatform van CrowdAboutNow. Dit betekent dat het daadwerkelijke investeerproces verloopt via crowdaboutnow.nl. Login met je bestaande CrowdAboutNow account, of maak een  account aan.</p>
+        <placetobe-signin-card
+          username="[[username]]"
+          password="[[password]]"
+          api-endpoint="[[apiEndpoint]]"
+          signed-in="{{signedIn}}"
+          access-token="{{accessToken}}"
+        ></placetobe-signin-card>
+      </div>
+
       <p>Hier komt contract</p>
       <p>Hier komt betalen</p>
 
@@ -72,11 +126,91 @@ Placetobe Campaign Invest Page
       is: 'placetobe-invest-page',
 
       properties: {
-        prop1: {
+
+        apiEndpoint: {
           type: String,
-          value: 'placetobe-invest-page',
+          value: null
+        },
+
+        campaignId: {
+          type: String,
+          value: null
+        },
+
+        incentiveId: {
+          type: String,
+          observer: '_handleIncentiveIdChanged'
+        },
+
+        username: {
+          type: String
+        },
+
+        password: {
+          type: String
+        },
+
+        signedIn: {
+          type: Boolean
+        },
+
+        accessToken: {
+          type: String
+        },
+
+        amount: {
+          type: Number
+        },
+
+        smallestAllowedAmount: {
+          type: Number
+        },
+
+        largestAllowedAmount: {
+          type: Number
+        },
+
+        amountStep: {
+          type: Number
+        },
+
+        amountValid: {
+          type: Boolean,
+          observer: '_handleAmountValidChanged'
+        },
+
+        contractTypeId: {
+          type: String,
+          value: null
+        },
+
+        steps: {
+          type: Array,
+          value: [
+            {"name": "Selecteer een beloning"},
+            {"name": "Kies een bedrag"},
+            {"name": "Login of Registreer"},
+            {"finished": true, "name": "Lees je contract"},
+            {"finished": true, "name": "Betalen"}
+          ]
         },
       },
+
+      observers: [
+        '_finishStepThree(signedIn, accessToken)'
+      ],
+
+      _handleIncentiveIdChanged: function(incentiveId) {
+        this.set('steps.0.finished', incentiveId || false);
+      },
+
+      _handleAmountValidChanged: function(amountValid) {
+        this.set('steps.1.finished', amountValid || false);        
+      },
+
+      _finishStepThree: function(signedIn, accessToken) {
+        this.set('steps.2.finished', (signedIn && accessToken));        
+      }
 
     });
   </script>

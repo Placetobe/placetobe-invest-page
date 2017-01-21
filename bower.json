@@ -8,9 +8,11 @@
     "placetobe-styles": "Placetobe/placetobe-styles",
     "placetobe-button": "Placetobe/placetobe-button",
     "placetobe-stepper-form": "Placetobe/placetobe-stepper-form",
+    "placetobe-signin-card": "Placetobe/placetobe-signin-card",
     "placetobe-input-box": "Placetobe/placetobe-input-box",
     "caas-auth": "CaasElements/caas-auth",
-    "caas-investment": "CaasElements/caas-investment"
+    "caas-investment": "CaasElements/caas-investment",
+    "iron-selector": "PolymerElements/iron-selector#^1.5.2"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

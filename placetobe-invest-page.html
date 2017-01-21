@@ -20,6 +20,14 @@ Placetobe Campaign Invest Page
       :host {
         display: block;
       }
+
+      #contractFrame {
+        width: 100%;
+        border: 1px solid var(--placetobe-color-gray);
+        max-height: 40vh;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
     </style>
     
     <caas-auth id="auth"
@@ -30,6 +38,7 @@ Placetobe Campaign Invest Page
     ></caas-auth>
     
     <caas-investment
+      id="caasInvest"
       api-endpoint="[[apiEndpoint]]"
       access-token="[[accessToken]]"
       investor-id="[[investorId]]"
@@ -51,7 +60,6 @@ Placetobe Campaign Invest Page
       cancel-callback-url="http://localhost/checkout/cancel"
       error-callback-url="http://localhost/checkout/error"
       reject-callback-url="http://localhost/checkout/reject"
-      on-investment-signed="_handleInvestmentSigned"
       on-investment-sign-error="_handleInvestmentSignError"
       contract-accepted="{{contractAccepted}}"
       on-contract-drafted="_handleContractDrafted"
@@ -113,7 +121,57 @@ Placetobe Campaign Invest Page
         ></placetobe-signin-card>
       </div>
 
-      <p>Hier komt contract</p>
+      <div>
+        <p>
+        <strong>Aandachtspunten</strong><br>
+        <ul>
+        <template is="dom-repeat" items="[[considerations]]" as="consideration">
+          <li>[[consideration]]</li>
+        </template>
+        </ul>
+        <br>
+        <label><input type="checkbox" checked="{{considerationsAccepted::change}}">Ik ga hiermee akkoord</label>
+        </p>
+
+        <p hidden$="[[!considerationsAccepted]]">
+        <strong>Contract</strong><br>
+        <section id="contractFrame"></section>
+        <br>
+        <label><input type="checkbox" checked="{{contractAccepted::change}}">Ik ga hiermee akkoord</label>
+        </p>
+
+        <p hidden$="[[!contractAccepted]]">
+        <strong>Algemene gebruiksvoorwaarden</strong><br>
+        Klik hier om de algemene gebruikersvoorwaarden te lezen.
+        <br>
+        <label><input type="checkbox" checked="{{termsOfUseAccepted::change}}">Ik ga hiermee akkoord</label>
+        </p>
+
+      </div>
+
+      <div>
+        <p>Rond je investering af door te betalen met iDEAL. Selecteer je bank, klik op 'Betalen met iDEAl' en dan word je automatisch doorgeleid naar je online bankrekening.</p>
+
+        <iron-selector attr-for-selected="value" selected="{{bic}}">
+          <template is="dom-repeat" items="[[availableBanks]]" as="bank">
+
+          <label value$="[[bank.bic]]">
+            <p>
+              <input type="radio" name="incentive">
+              [[bank.name]]
+            </p>
+          </label>
+
+          </template>
+        </iron-selector>          
+
+        <placetobe-button
+          disabled$="[[!checkoutAllowed]]"
+          on-tap="checkout"
+        ><span>Betalen met iDEAL</span></placetobe-button>
+
+      </div>
+
       <p>Hier komt betalen</p>
 
     </placetobe-stepper-form>
@@ -184,13 +242,40 @@ Placetobe Campaign Invest Page
           value: null
         },
 
+        considerations: {
+          type: Array
+        },
+
+        considerationsAccepted: {
+          type: Boolean
+        },
+
+        contractAccepted: {
+          type: Boolean          
+        },
+
+        termsOfUseAccepted: {
+          type: Boolean,
+          observer: '_handleTermsOfUseAcceptedChanged'
+        },
+
+        bic: {
+          type: String,
+          value: null
+        },
+
+        checkoutAllowed: {
+          type: Boolean,
+          value: false
+        },
+
         steps: {
           type: Array,
           value: [
             {"name": "Selecteer een beloning"},
             {"name": "Kies een bedrag"},
             {"name": "Login of Registreer"},
-            {"finished": true, "name": "Lees je contract"},
+            {"name": "Lees je contract"},
             {"finished": true, "name": "Betalen"}
           ]
         },
@@ -199,6 +284,10 @@ Placetobe Campaign Invest Page
       observers: [
         '_finishStepThree(signedIn, accessToken)'
       ],
+
+      checkout: function() {
+        this.$.caasInvest.checkout();
+      },
 
       _handleIncentiveIdChanged: function(incentiveId) {
         this.set('steps.0.finished', incentiveId || false);
@@ -210,6 +299,22 @@ Placetobe Campaign Invest Page
 
       _finishStepThree: function(signedIn, accessToken) {
         this.set('steps.2.finished', (signedIn && accessToken));        
+      },
+
+      _handleContractDrafted: function(evt, draftContract) {
+        this.$.contractFrame.innerHTML = draftContract;
+      },
+
+      _handleContractDraftError: function(evt, error) {
+        alert('Sorry, er is iets iets misgegaan bij het downloaden van je contract.')
+      },
+
+      _handleTermsOfUseAcceptedChanged: function(termsOfUseAccepted) {
+        this.set('steps.3.finished', termsOfUseAccepted);        
+      },
+
+      _handleInvestmentSignError: function() {
+        alert('Sorry, er is iets iets misgegaan bij het valideren van je betaling.')
       }
 
     });

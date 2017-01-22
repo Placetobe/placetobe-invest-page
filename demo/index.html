@@ -3,7 +3,7 @@
   <head>
     <title>placetobe-invest-page demo</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=no">
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
     <script>
@@ -26,15 +26,26 @@
           padding: 0;
         }
       }
+
+      placetobe-invest-page {
+        position: fixed;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        --placetobe-stepper-form-content-height: 100vh;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: white;
+      }
     </style>
 
   </head>
   <body>
 
-    <div class="vertical-section-container centered">
-      <h3>Basic placetobe-invest-page Demo</h3>
-      <demo-snippet>
-        <template>
           <placetobe-invest-page
             api-endpoint="http://canapi.local"
             campaign-id="719"
@@ -42,9 +53,6 @@
             username="investor@caastest.local"
             password="abc123"
           ></placetobe-invest-page>
-        </template>
-      </demo-snippet>
-    </div>
 
   </body>
 </html>

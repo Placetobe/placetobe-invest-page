@@ -21,6 +21,10 @@ Placetobe Campaign Invest Page
         display: block;
       }
 
+      placetobe-stepper-form {
+        height: 100%;
+      }
+
       #contractFrame {
         width: 100%;
         border: 1px solid var(--placetobe-color-gray);
@@ -152,18 +156,17 @@ Placetobe Campaign Invest Page
       <div>
         <p>Rond je investering af door te betalen met iDEAL. Selecteer je bank, klik op 'Betalen met iDEAl' en dan word je automatisch doorgeleid naar je online bankrekening.</p>
 
-        <iron-selector attr-for-selected="value" selected="{{bic}}">
+
+        <p>
+          <select value="{{bic::change}}">
+          <option>Kies een bank...</option>
+          
           <template is="dom-repeat" items="[[availableBanks]]" as="bank">
-
-          <label value$="[[bank.bic]]">
-            <p>
-              <input type="radio" name="incentive">
-              [[bank.name]]
-            </p>
-          </label>
-
+              <option value="[[bank.bic]]">[[bank.name]]</option>
           </template>
-        </iron-selector>          
+
+          </select>
+        </p>
 
         <placetobe-button
           disabled$="[[!checkoutAllowed]]"

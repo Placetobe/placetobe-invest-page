@@ -25,12 +25,8 @@ Placetobe Campaign Invest Page
         height: 100%;
       }
 
-      #contractFrame {
-        width: 100%;
-        border: 1px solid var(--placetobe-color-gray);
-        max-height: 40vh;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
+      b, strong {
+        font-weight: 500;
       }
     </style>
     
@@ -59,6 +55,7 @@ Placetobe Campaign Invest Page
       available-banks="{{availableBanks}}"
       considerations="{{considerations}}"
       considerations-accepted="{{considerationsAccepted}}"
+      terms-of-use-accepted="{{termsOfUseAccepted}}"
       checkout-allowed="{{checkoutAllowed}}"
       success-callback-url="http://localhost/checkout/success"
       cancel-callback-url="http://localhost/checkout/cancel"
@@ -127,6 +124,25 @@ Placetobe Campaign Invest Page
 
       <div>
         <p>
+        <strong>Contract</strong><br>
+        <section id="contractFrame"></section>
+        <br>
+        <label><input type="checkbox" checked="{{contractAccepted::change}}">Ik ga hiermee akkoord</label>
+        </p>
+
+      </div>
+
+      <div>
+        <p>Rond je investering af door te betalen met iDEAL. Selecteer je bank, klik op 'Betalen met iDEAl' en dan word je automatisch doorgeleid naar je online bankrekening.</p>
+
+        <p>
+        <strong>Algemene gebruiksvoorwaarden</strong><br>
+        Klik hier om de algemene gebruikersvoorwaarden te lezen.
+        <br>
+        <label><input type="checkbox" checked="{{termsOfUseAccepted::change}}">Ik ga hiermee akkoord</label>
+        </p>
+
+        <p>
         <strong>Aandachtspunten</strong><br>
         <ul>
         <template is="dom-repeat" items="[[considerations]]" as="consideration">
@@ -136,26 +152,6 @@ Placetobe Campaign Invest Page
         <br>
         <label><input type="checkbox" checked="{{considerationsAccepted::change}}">Ik ga hiermee akkoord</label>
         </p>
-
-        <p hidden$="[[!considerationsAccepted]]">
-        <strong>Contract</strong><br>
-        <section id="contractFrame"></section>
-        <br>
-        <label><input type="checkbox" checked="{{contractAccepted::change}}">Ik ga hiermee akkoord</label>
-        </p>
-
-        <p hidden$="[[!contractAccepted]]">
-        <strong>Algemene gebruiksvoorwaarden</strong><br>
-        Klik hier om de algemene gebruikersvoorwaarden te lezen.
-        <br>
-        <label><input type="checkbox" checked="{{termsOfUseAccepted::change}}">Ik ga hiermee akkoord</label>
-        </p>
-
-      </div>
-
-      <div>
-        <p>Rond je investering af door te betalen met iDEAL. Selecteer je bank, klik op 'Betalen met iDEAl' en dan word je automatisch doorgeleid naar je online bankrekening.</p>
-
 
         <p>
           <select value="{{bic::change}}">
@@ -254,12 +250,12 @@ Placetobe Campaign Invest Page
         },
 
         contractAccepted: {
-          type: Boolean          
+          type: Boolean,
+          observer: '_handleContractAcceptedChanged'
         },
 
         termsOfUseAccepted: {
-          type: Boolean,
-          observer: '_handleTermsOfUseAcceptedChanged'
+          type: Boolean
         },
 
         bic: {
@@ -305,6 +301,8 @@ Placetobe Campaign Invest Page
       },
 
       _handleContractDrafted: function(evt, draftContract) {
+        console.log('_handleContractDrafted', evt, draftContract)
+        this.draftContract = draftContract;
         this.$.contractFrame.innerHTML = draftContract;
       },
 
@@ -312,8 +310,9 @@ Placetobe Campaign Invest Page
         alert('Sorry, er is iets iets misgegaan bij het downloaden van je contract.')
       },
 
-      _handleTermsOfUseAcceptedChanged: function(termsOfUseAccepted) {
-        this.set('steps.3.finished', termsOfUseAccepted);        
+      _handleContractAcceptedChanged: function(contractAccepted) {
+        console.log('_handleContractAcceptedChanged', contractAccepted)
+        this.set('steps.3.finished', contractAccepted);        
       },
 
       _handleInvestmentSignError: function() {

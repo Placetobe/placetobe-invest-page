@@ -4,6 +4,7 @@
 <link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
 <link rel="import" href="../placetobe-signin-card/placetobe-signin-card.html">
+<link rel="import" href="../placetobe-signup-card/placetobe-signup-card.html">
 <link rel="import" href="../placetobe-input-box/placetobe-input-box.html">
 <link rel="import" href="../placetobe-stepper-form/placetobe-stepper-form.html">
 
@@ -27,6 +28,10 @@ Placetobe Campaign Invest Page
 
       b, strong {
         font-weight: 500;
+      }
+
+      placetobe-signin-card[hidden] {
+        display: none;
       }
     </style>
     
@@ -113,13 +118,49 @@ Placetobe Campaign Invest Page
 
       <div>
         <p>Placetobe is een partnerplatform van CrowdAboutNow. Dit betekent dat het daadwerkelijke investeerproces verloopt via crowdaboutnow.nl. Login met je bestaande CrowdAboutNow account, of maak een  account aan.</p>
-        <placetobe-signin-card
-          username="[[username]]"
-          password="[[password]]"
-          api-endpoint="[[apiEndpoint]]"
-          signed-in="{{signedIn}}"
-          access-token="{{accessToken}}"
-        ></placetobe-signin-card>
+        
+          <placetobe-signin-card
+            hidden$="[[!existingUser]]"
+            id="signInCard"
+            username="[[username]]"
+            password="[[password]]"
+            api-endpoint="[[apiEndpoint]]"
+            signed-in="{{signedIn}}"
+            access-token="{{accessToken}}"
+            user-role="investor"
+          ></placetobe-signin-card>
+
+        <template is="dom-if" if="[[!signedIn]]">
+          <p hidden$="[[!existingUser]]">
+            Nieuwe gebruiker? Klik <a href="#" on-tap="_isNewUser">hier</a> om te registreren.
+          </p>
+        </template>
+
+        <template is="dom-if" if="[[!signedIn]]">
+        <template is="dom-if" if="[[!existingUser]]">
+          <placetobe-signup-card
+            username="investor@caastest.local"
+            password="abc123"
+            first-name="John"
+            last-name="Doe"
+            street="Main Street"
+            house-number="101"
+            city="Sim City"
+            postal-code="1234AB"
+            country="Nederland"
+            user-role="investor"
+            api-endpoint="[[apiEndpoint]]"
+            on-signed-up="_handleSignedUp"
+            user-role="investor"
+          ></placetobe-signup-card>
+
+          <p>
+            Bestaande gebruiker? Klik <a href="#" on-tap="_isExistingUser">hier</a> om in te loggen.
+          </p>
+
+        </template>
+        </template>
+
       </div>
 
       <div>
@@ -208,7 +249,7 @@ Placetobe Campaign Invest Page
         },
 
         signedIn: {
-          type: Boolean
+          type: Boolean,
         },
 
         accessToken: {
@@ -217,6 +258,11 @@ Placetobe Campaign Invest Page
 
         amount: {
           type: Number
+        },
+
+        existingUser: {
+          type: Boolean,
+          value: true
         },
 
         smallestAllowedAmount: {
@@ -288,6 +334,21 @@ Placetobe Campaign Invest Page
         this.$.caasInvest.checkout();
       },
 
+      _isNewUser: function() {
+        this.existingUser = false;
+      },
+
+      _isExistingUser: function() {
+        this.existingUser = true;
+      },
+
+      _handleSignedUp: function(evt, data) {
+        this.username = data.username;
+        this.password = data.password;
+        this.$.signInCard.signIn();
+        this.existingUser = true;
+      },
+
       _handleIncentiveIdChanged: function(incentiveId) {
         this.set('steps.0.finished', incentiveId || false);
       },
@@ -301,7 +362,6 @@ Placetobe Campaign Invest Page
       },
 
       _handleContractDrafted: function(evt, draftContract) {
-        console.log('_handleContractDrafted', evt, draftContract)
         this.draftContract = draftContract;
         this.$.contractFrame.innerHTML = draftContract;
       },
@@ -311,7 +371,6 @@ Placetobe Campaign Invest Page
       },
 
       _handleContractAcceptedChanged: function(contractAccepted) {
-        console.log('_handleContractAcceptedChanged', contractAccepted)
         this.set('steps.3.finished', contractAccepted);        
       },
 

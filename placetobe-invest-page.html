@@ -63,10 +63,10 @@ Placetobe Campaign Invest Page
       considerations-accepted="{{considerationsAccepted}}"
       terms-of-use-accepted="{{termsOfUseAccepted}}"
       checkout-allowed="{{checkoutAllowed}}"
-      success-callback-url="http://localhost/checkout/success"
-      cancel-callback-url="http://localhost/checkout/cancel"
-      error-callback-url="http://localhost/checkout/error"
-      reject-callback-url="http://localhost/checkout/reject"
+      success-callback-url="[[successCallbackUrl]]"
+      cancel-callback-url="[[cancelCallbackUrl]]"
+      error-callback-url="[[errorCallbackUrl]]"
+      reject-callback-url="[[rejectCallbackUrl]]"
       on-investment-sign-error="_handleInvestmentSignError"
       contract-accepted="{{contractAccepted}}"
       on-contract-drafted="_handleContractDrafted"
@@ -325,6 +325,27 @@ Placetobe Campaign Invest Page
             {"finished": true, "name": "Betalen"}
           ]
         },
+
+        successCallbackUrl: {
+          type: String,
+          value: null
+        },
+
+        cancelCallbackUrl: {
+          type: String,
+          value: null
+        },
+
+        errorCallbackUrl: {
+          type: String,
+          value: null
+        },
+
+        rejectCallbackUrl: {
+          type: String,
+          value: null
+        },
+
       },
 
       observers: [

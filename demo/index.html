@@ -46,13 +46,17 @@
   </head>
   <body>
 
-          <placetobe-invest-page
-            api-endpoint="http://canapi.local"
-            campaign-id="719"
-            contract-type-id="2"
-            username="investor@caastest.local"
-            password="abc123"
-          ></placetobe-invest-page>
+    <placetobe-invest-page
+      api-endpoint="http://canapi.local"
+      campaign-id="719"
+      contract-type-id="2"
+      username="investor@caastest.local"
+      password="abc123"
+      success-callback-url="http://localhost:8080/investeren/719/success"
+      cancel-callback-url="http://localhost:8080/investeren/719/cancel"
+      error-callback-url="http://localhost:8080/investeren/719/error"
+      reject-callback-url="http://localhost:8080/investeren/719/reject"
+    ></placetobe-invest-page>
 
   </body>
 </html>

@@ -2,6 +2,7 @@
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../caas-auth/caas-auth.html">
 <link rel="import" href="../caas-investment/caas-investment.html">
+<link rel="import" href="../caas-campaign/caas-campaign.html">
 <link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
 <link rel="import" href="../placetobe-signin-card/placetobe-signin-card.html">
@@ -45,6 +46,12 @@ Placetobe Campaign Invest Page
       user-id="{{investorId}}"
     ></caas-auth>
     
+    <caas-campaign
+      api-endpoint="[[apiEndpoint]]"
+      campaign-id="[[campaignId]]"
+      title="{{title}}"
+    ></caas-campaign>
+
     <caas-investment
       id="caasInvest"
       api-endpoint="[[apiEndpoint]]"

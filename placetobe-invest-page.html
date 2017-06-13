@@ -2,6 +2,7 @@
 <link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../caas-auth/caas-auth.html">
 <link rel="import" href="../caas-investment/caas-investment.html">
+<link rel="import" href="../caas-campaign/caas-campaign.html">
 <link rel="import" href="../placetobe-behaviors/placetobe-styles-behavior.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
 <link rel="import" href="../placetobe-signin-card/placetobe-signin-card.html">
@@ -45,6 +46,12 @@ Placetobe Campaign Invest Page
       user-id="{{investorId}}"
     ></caas-auth>
     
+    <caas-campaign
+      api-endpoint="[[apiEndpoint]]"
+      campaign-id="[[campaignId]]"
+      title="{{title}}"
+    ></caas-campaign>
+
     <caas-investment
       id="caasInvest"
       api-endpoint="[[apiEndpoint]]"
@@ -177,6 +184,23 @@ Placetobe Campaign Invest Page
       </div>
 
       <div>
+        <p>
+        <strong>Jouw investering</strong><br>
+        <ul>
+          <li>
+            Campagne: [[title]]
+          </li>
+          <li>
+            Bedrag: &euro;[[amount]]
+          </li>   
+          <li>
+            Beloning: [[selectedIncentiveDescription]]
+          </li>                    
+        </ul>
+        </p>
+
+        <hr>
+
         <p>Rond je investering af door te betalen met iDEAL. Selecteer je bank, klik op 'Betalen met iDEAL' en dan word je automatisch doorgeleid naar je online bankrekening.</p>
 
         <p>
@@ -241,6 +265,10 @@ Placetobe Campaign Invest Page
         incentiveId: {
           type: String,
           observer: '_handleIncentiveIdChanged'
+        },
+
+        title: {
+          type: String
         },
 
         username: {
@@ -348,6 +376,19 @@ Placetobe Campaign Invest Page
           value: null
         },
 
+        availableContractTypes: {
+          type: Array
+        },
+
+        availableIncentives: {
+          type: Object
+        },
+
+        selectedIncentiveDescription: {
+          type: String,
+          computed: '_computeSelectedIncentiveDescription(incentiveId, availableIncentives.*)'
+        }
+
       },
 
       observers: [
@@ -404,6 +445,20 @@ Placetobe Campaign Invest Page
 
       _handleInvestmentSignError: function() {
         alert('Sorry, er is iets iets misgegaan bij het valideren van je betaling.')
+      },
+
+      _computeSelectedIncentiveDescription: function (selectedIncentiveId, availableIncentivesChange) {
+        var availableIncentives = availableIncentivesChange.base;
+
+        var filteredItems = availableIncentives.filter(function(incentive){ 
+          return incentive.id === selectedIncentiveId;
+        })
+
+        if(! (filteredItems && filteredItems[0]) ) return;
+
+        var selectedIncentive = filteredItems[0];
+
+        return selectedIncentive.title || selectedIncentive.message;
       }
 
     });

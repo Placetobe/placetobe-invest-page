@@ -372,9 +372,17 @@ Placetobe Campaign Invest Page
           value: null
         },
 
+        availableContractTypes: {
+          type: Array
+        },
+
+        availableIncentives: {
+          type: Object
+        },
+
         selectedIncentiveDescription: {
           type: String,
-          computed: '_computeSelectedIncentiveDescription(incentiveId)'
+          computed: '_computeSelectedIncentiveDescription(incentiveId, availableIncentives.*)'
         }
 
       },
@@ -435,14 +443,18 @@ Placetobe Campaign Invest Page
         alert('Sorry, er is iets iets misgegaan bij het valideren van je betaling.')
       },
 
-      _computeSelectedIncentiveDescription: function (selectedIncentiveId) {
-        var availableIncentives = this.availableIncentives;
+      _computeSelectedIncentiveDescription: function (selectedIncentiveId, availableIncentivesChange) {
+        var availableIncentives = availableIncentivesChange.base;
 
-        var selectedIncentive = availableIncentives.filter(function(incentive){ 
+        var filteredItems = availableIncentives.filter(function(incentive){ 
           return incentive.id === selectedIncentiveId;
         })
 
-        return selectedIncentive[0].title || selectedIncentive[0].message;
+        if(! (filteredItems && filteredItems[0]) ) return;
+
+        var selectedIncentive = filteredItems[0];
+
+        return selectedIncentive.title || selectedIncentive.message;
       }
 
     });

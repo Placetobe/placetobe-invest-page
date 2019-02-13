@@ -106,7 +106,7 @@ Placetobe Campaign Invest Page
             </label>
 
             </template>
-          </iron-selector>          
+          </iron-selector>
         </template>
 
       </div>
@@ -132,7 +132,7 @@ Placetobe Campaign Invest Page
 
       <div>
         <p>Placetobe is een partnerplatform van CrowdAboutNow. Dit betekent dat het daadwerkelijke investeerproces verloopt via crowdaboutnow.nl. Login met je bestaande CrowdAboutNow account, of maak een account aan.</p>
-        
+
           <placetobe-signin-card
             hidden$="[[!existingUser]]"
             id="signInCard"
@@ -196,10 +196,10 @@ Placetobe Campaign Invest Page
           </li>
           <li>
             Bedrag: &euro;[[amount]]
-          </li>   
+          </li>
           <li>
             Beloning: [[selectedIncentiveDescription]]
-          </li>                    
+          </li>
         </ul>
         </p>
 
@@ -228,7 +228,7 @@ Placetobe Campaign Invest Page
         <p>
           <select value="{{bic::change}}">
           <option>Kies een bank...</option>
-          
+
           <template is="dom-repeat" items="[[availableBanks]]" as="bank">
               <option value="[[bank.bic]]">[[bank.name]]</option>
           </template>
@@ -352,7 +352,7 @@ Placetobe Campaign Invest Page
         steps: {
           type: Array,
           value: [
-            {"name": "Selecteer een beloning"},
+            {"name": "Selecteer een beloning", finished: true},
             {"name": "Kies een bedrag"},
             {"name": "Login of Registreer"},
             {"name": "Lees je contract"},

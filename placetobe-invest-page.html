@@ -14,7 +14,7 @@
 `placetobe-invest-page`
 Placetobe Campaign Invest Page
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="placetobe-invest-page">
@@ -38,14 +38,18 @@ Placetobe Campaign Invest Page
         display: none;
       }
     </style>
-    
-    <caas-auth id="auth"
+
+    <caas-auth
+      id="auth"
       api-endpoint="http://canapi.local"
       signed-in="{{signedIn}}"
       access-token="{{accessToken}}"
-      user-id="{{investorId}}"
     ></caas-auth>
-    
+
+    <caas-session
+      investor-id="{{investorId}}">
+    </caas-session>
+
     <caas-campaign
       api-endpoint="[[apiEndpoint]]"
       campaign-id="[[campaignId]]"
@@ -87,7 +91,7 @@ Placetobe Campaign Invest Page
       <div>
 
         <template is="dom-if" if="[[!availableIncentives]]">
-          <p>beloningen laden...</p>
+          <p>Er zijn geen beloningen</p>
         </template>
         <template is="dom-if" if="[[availableIncentives]]">
           <iron-selector attr-for-selected="value" selected="{{incentiveId}}">

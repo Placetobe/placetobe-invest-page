@@ -14,7 +14,7 @@
 `placetobe-invest-page`
 Placetobe Campaign Invest Page
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="placetobe-invest-page">
@@ -38,14 +38,18 @@ Placetobe Campaign Invest Page
         display: none;
       }
     </style>
-    
-    <caas-auth id="auth"
+
+    <caas-auth
+      id="auth"
       api-endpoint="http://canapi.local"
       signed-in="{{signedIn}}"
       access-token="{{accessToken}}"
-      user-id="{{investorId}}"
     ></caas-auth>
-    
+
+    <caas-session
+      investor-id="{{investorId}}">
+    </caas-session>
+
     <caas-campaign
       api-endpoint="[[apiEndpoint]]"
       campaign-id="[[campaignId]]"
@@ -87,7 +91,7 @@ Placetobe Campaign Invest Page
       <div>
 
         <template is="dom-if" if="[[!availableIncentives]]">
-          <p>beloningen laden...</p>
+          <p>Er zijn geen beloningen</p>
         </template>
         <template is="dom-if" if="[[availableIncentives]]">
           <iron-selector attr-for-selected="value" selected="{{incentiveId}}">
@@ -102,7 +106,7 @@ Placetobe Campaign Invest Page
             </label>
 
             </template>
-          </iron-selector>          
+          </iron-selector>
         </template>
 
       </div>
@@ -128,7 +132,7 @@ Placetobe Campaign Invest Page
 
       <div>
         <p>Placetobe is een partnerplatform van CrowdAboutNow. Dit betekent dat het daadwerkelijke investeerproces verloopt via crowdaboutnow.nl. Login met je bestaande CrowdAboutNow account, of maak een account aan.</p>
-        
+
           <placetobe-signin-card
             hidden$="[[!existingUser]]"
             id="signInCard"
@@ -192,10 +196,10 @@ Placetobe Campaign Invest Page
           </li>
           <li>
             Bedrag: &euro;[[amount]]
-          </li>   
+          </li>
           <li>
             Beloning: [[selectedIncentiveDescription]]
-          </li>                    
+          </li>
         </ul>
         </p>
 
@@ -224,7 +228,7 @@ Placetobe Campaign Invest Page
         <p>
           <select value="{{bic::change}}">
           <option>Kies een bank...</option>
-          
+
           <template is="dom-repeat" items="[[availableBanks]]" as="bank">
               <option value="[[bank.bic]]">[[bank.name]]</option>
           </template>
@@ -348,7 +352,7 @@ Placetobe Campaign Invest Page
         steps: {
           type: Array,
           value: [
-            {"name": "Selecteer een beloning"},
+            {"name": "Selecteer een beloning", finished: true},
             {"name": "Kies een bedrag"},
             {"name": "Login of Registreer"},
             {"name": "Lees je contract"},
@@ -387,6 +391,10 @@ Placetobe Campaign Invest Page
         selectedIncentiveDescription: {
           type: String,
           computed: '_computeSelectedIncentiveDescription(incentiveId, availableIncentives.*)'
+        },
+        investorId: {
+          type: Number,
+          notify: true
         }
 
       },
@@ -423,11 +431,11 @@ Placetobe Campaign Invest Page
       },
 
       _handleAmountValidChanged: function(amountValid) {
-        this.set('steps.1.finished', amountValid || false);        
+        this.set('steps.1.finished', amountValid || false);
       },
 
       _finishStepThree: function(signedIn, accessToken) {
-        this.set('steps.2.finished', (signedIn && accessToken));        
+        this.set('steps.2.finished', (signedIn && accessToken));
       },
 
       _handleContractDrafted: function(evt, draftContract) {
@@ -440,7 +448,7 @@ Placetobe Campaign Invest Page
       },
 
       _handleContractAcceptedChanged: function(contractAccepted) {
-        this.set('steps.3.finished', contractAccepted);        
+        this.set('steps.3.finished', contractAccepted);
       },
 
       _handleInvestmentSignError: function() {
@@ -450,7 +458,7 @@ Placetobe Campaign Invest Page
       _computeSelectedIncentiveDescription: function (selectedIncentiveId, availableIncentivesChange) {
         var availableIncentives = availableIncentivesChange.base;
 
-        var filteredItems = availableIncentives.filter(function(incentive){ 
+        var filteredItems = availableIncentives.filter(function(incentive){
           return incentive.id === selectedIncentiveId;
         })
 

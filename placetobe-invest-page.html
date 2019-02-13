@@ -391,6 +391,10 @@ Placetobe Campaign Invest Page
         selectedIncentiveDescription: {
           type: String,
           computed: '_computeSelectedIncentiveDescription(incentiveId, availableIncentives.*)'
+        },
+        investorId: {
+          type: Number,
+          notify: true
         }
 
       },
@@ -427,11 +431,11 @@ Placetobe Campaign Invest Page
       },
 
       _handleAmountValidChanged: function(amountValid) {
-        this.set('steps.1.finished', amountValid || false);        
+        this.set('steps.1.finished', amountValid || false);
       },
 
       _finishStepThree: function(signedIn, accessToken) {
-        this.set('steps.2.finished', (signedIn && accessToken));        
+        this.set('steps.2.finished', (signedIn && accessToken));
       },
 
       _handleContractDrafted: function(evt, draftContract) {
@@ -444,7 +448,7 @@ Placetobe Campaign Invest Page
       },
 
       _handleContractAcceptedChanged: function(contractAccepted) {
-        this.set('steps.3.finished', contractAccepted);        
+        this.set('steps.3.finished', contractAccepted);
       },
 
       _handleInvestmentSignError: function() {
@@ -454,7 +458,7 @@ Placetobe Campaign Invest Page
       _computeSelectedIncentiveDescription: function (selectedIncentiveId, availableIncentivesChange) {
         var availableIncentives = availableIncentivesChange.base;
 
-        var filteredItems = availableIncentives.filter(function(incentive){ 
+        var filteredItems = availableIncentives.filter(function(incentive){
           return incentive.id === selectedIncentiveId;
         })
 

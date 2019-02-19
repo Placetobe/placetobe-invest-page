@@ -153,15 +153,6 @@ Placetobe Campaign Invest Page
         <template is="dom-if" if="[[!signedIn]]">
         <template is="dom-if" if="[[!existingUser]]">
           <placetobe-signup-card
-            username="investor@caastest.local"
-            password="abc123"
-            first-name="John"
-            last-name="Doe"
-            street="Main Street"
-            house-number="101"
-            city="Sim City"
-            postal-code="1234AB"
-            country="Nederland"
             user-role="investor"
             api-endpoint="[[apiEndpoint]]"
             on-signed-up="_handleSignedUp"
